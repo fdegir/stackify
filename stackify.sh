@@ -27,3 +27,6 @@ for NODE_CONFIG in $(echo ${STACKIFY_NODE_CONF} | sed "s/,/ /g"); do
     echo "-> Found node configuration file ${SCRIPT_PATH}/${NODE_CONFIG}"
     create_vm "${SCRIPT_PATH}/${NODE_CONFIG}"
 done
+
+STACKIFY_VMS=$(echo ${STACKIFY_NODE_CONF} | sed "s/\.conf//g" | sed "s/,/ /g")
+start_vms "${STACKIFY_VMS}"
