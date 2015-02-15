@@ -16,7 +16,7 @@ Collection of simple scripts to get OpenStack POC up and running on VMs created 
 * Ubuntu Server 14.04.1 LTS is installed on 3 VMs.
 * VMs started in headless mode.
 
-# TODO:
+# TODO
 
 * Use Ansible to configure networking and other stuff on VMs.
 * Create 2 NAT networks on VirtualBox.
@@ -32,7 +32,20 @@ Collection of simple scripts to get OpenStack POC up and running on VMs created 
     * compute_node: 2 NICs (10.0.0.31/24, 10.0.1.31/24)
 * Deploy OpenStack components.
 
-# References:
+# Notes
 
-Check [OpenStack Installation Guide] (http://docs.openstack.org/juno/install-guide/install/apt/content/ch_overview.html#architecture_example-architectures) to find out what is going on.
+OpenStack Storage components/network skipped for the timebeing.
+
+# References
+
+* VirtualBox
+    * [vboxmanage] (https://www.virtualbox.org/manual/ch08.html)
+    * [VirtualBox Networking] (https://www.virtualbox.org/manual/ch06.html)
+* Preseed/Kickstart
+    * [debian.org] (https://www.debian.org/releases/stable/i386/apb.html)
+    * [askubuntu.com] (http://askubuntu.com/questions/122505/how-do-i-create-a-completely-unattended-install-of-ubuntu)
+* Ansible
+    * [ansible.com] (http://docs.ansible.com/intro.html)
+* OpenStack
+    * [Example Architectures#Minimal Architecture] (http://docs.openstack.org/juno/install-guide/install/apt/content/ch_overview.html#architecture_example-architectures)
 
