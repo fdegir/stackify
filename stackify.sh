@@ -20,8 +20,17 @@ exec 2> >(tee -a ${STACKIFY_ERRFILE} >&2)
 # source include scripts
 source "${SCRIPT_PATH}/vm_functions.inc.sh"
 
-# get list of VM configuration files
-source ${SCRIPT_PATH}/vm.conf
+# check if user specified configuration file is in use
+STACKIFY_VM_CONF_FILE=$1
+if [ "${STACKIFY_VM_CONF_FILE}" != "" ] && [ -e "${STACKIFY_VM_CONF_FILE}" ]; then
+    # get list of VMs from user specified configuration file
+    echo "-> Using provided VM configuration file ${STACKIFY_VM_CONF_FILE}"
+    source ${STACKIFY_VM_CONF_FILE}
+else
+    # get list of VMs from default configuration files
+    echo "-> Using default VM configuration file ${SCRIPT_PATH}/vm.conf"
+    source ${SCRIPT_PATH}/vm.conf
+fi
 
 for NODE_CONFIG in $(echo ${STACKIFY_NODE_CONF} | sed "s/,/ /g"); do
     echo "-> Found node configuration file ${SCRIPT_PATH}/${NODE_CONFIG}"
