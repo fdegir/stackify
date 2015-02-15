@@ -25,7 +25,7 @@ function create_vm {
 
     # configure the storage
     vboxmanage storagectl ${STACKIFY_NAME} --name IDE --add ide --controller PIIX4 --portcount 2 --bootable on
-    vboxmanage storageattach ${STACKIFY_NAME} --storagectl IDE --port 1 --device 0 --medium /Users/fdegir/stackify/osiso/autoinstall.iso --type dvddrive
+    vboxmanage storageattach ${STACKIFY_NAME} --storagectl IDE --port 1 --device 0 --medium ${STACKIFY_BASEDIR}/osiso/autoinstall.iso --type dvddrive
     vboxmanage storagectl ${STACKIFY_NAME} --name SATA --add sata --controller IntelAhci --portcount 1 --bootable on
     vboxmanage createhd --filename ${STACKIFY_VMDIR}/${STACKIFY_NAME}/${STACKIFY_NAME}.vdi --size ${STACKIFY_SIZE} --format VDI > ${STACKIFY_LOGFILE} 2>&1
     vboxmanage storageattach ${STACKIFY_NAME} --storagectl SATA --port 0 --device 0 --medium ${STACKIFY_VMDIR}/${STACKIFY_NAME}/${STACKIFY_NAME}.vdi --type hdd
@@ -42,14 +42,18 @@ function start_vms {
 
     for VM in ${STACKIFY_VMS}; do
         echo "-> Starting VM \"${VM}\""
+        # start VMs headlessly - comment the line otherwise
         vboxmanage startvm ${VM} --type headless > ${STACKIFY_LOGFILE} 2>&1
+        # start VMs normally - uncomment the line
+        #vboxmanage startvm ${VM} > ${STACKIFY_LOGFILE} 2>&1
         if [ $? != 0 ]; then
             echo "-> Failed starting VM \"${STACKIFY_NAME}\""
         fi
     done
     echo "-> All VMs are started. Waiting for installations to finish."
 
-    i=0;
+    NO_OF_VMS=$(echo ${STACKIFY_VMS} | wc -w);
+    i=0
     for j in {1..60}; do
         for VM in ${STACKIFY_VMS}; do
             vboxmanage guestproperty get ${VM} "/VirtualBox/GuestInfo/Net/0/V4/IP" | grep -i "no value" > /dev/null
@@ -67,11 +71,13 @@ function start_vms {
 
         echo -n "."
 
-        if [ $i == 3 ]; then
+        if [ $i == ${NO_OF_VMS} ]; then
             break
         fi
         sleep 15
     done
+
+    # TODO: Remove image from IDE to finish the installation
 
     echo -e "\n-> Installation of nodes completed!"
 }
